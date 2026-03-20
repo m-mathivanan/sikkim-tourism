@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 from typing import Dict
 
 load_dotenv()
@@ -10,9 +10,7 @@ class AIService:
         self.api_key = os.environ.get('EMERGENT_LLM_KEY') or os.environ.get('GOOGLE_API_KEY')
         if not self.api_key:
             raise ValueError("No API key found. Set EMERGENT_LLM_KEY in .env")
-        genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel('gemini-2.0-flash')
-        self.sessions = {}
+        self.client = genai.Client(api_key=self.api_key)
         self.supported_languages = {
             "english": "English",
             "nepali": "Nepali",
@@ -40,11 +38,12 @@ Always be respectful and culturally sensitive."""
 
     async def get_chat_response(self, message: str, session_id: str, language: str = "english") -> str:
         try:
-            if session_id not in self.sessions:
-                self.sessions[session_id] = self.model.start_chat(history=[])
             system = self.get_system_message(language)
             full_message = f"{system}\n\nUser: {message}"
-            response = self.sessions[session_id].send_message(full_message)
+            response = self.client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=full_message
+            )
             return response.text
         except Exception as e:
             return f"I'm having trouble right now. Please try again. Error: {str(e)}"

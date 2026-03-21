@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { HashRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { MapPin, Users, Camera, Globe } from 'lucide-react';
 import axios from "axios";
 import { Header } from './components/Header';
@@ -253,7 +253,7 @@ const Home = () => {
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/monastery/:monasteryId" element={<MonasteryDetail />} />
@@ -264,7 +264,7 @@ function App() {
           <Route path="/travel-planning" element={<TravelPlanning />} />
           <Route path="/games" element={<GamifiedLearning />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }

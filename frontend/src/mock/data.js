@@ -137,6 +137,26 @@ export const mockEvents = [
     description: "Guardian deity festival celebrating Mount Kanchenjunga as the protector of Sikkim",
     type: "Guardian Deity Festival",
     highlights: ["Warrior dance", "Traditional archery", "Cultural performances"]
+  },
+  {
+    id: 5,
+    name: "Kagyed Dance",
+    monastery: "Phodong Monastery",
+    date: "2024-12-28",
+    duration: "2 days",
+    description: "Performed before the Tibetan New Year, these masked dances symbolize the destruction of evil forces.",
+    type: "Masked Dance Festival",
+    highlights: ["Cham dances", "Monastic rituals", "Feast"]
+  },
+  {
+    id: 6,
+    name: "Losoong (Sikkimese New Year)",
+    monastery: "Phodong & Rumtek",
+    date: "2024-12-30",
+    duration: "5 days",
+    description: "The Sikkimese New Year, celebrated with traditional dances and prayers for a good harvest.",
+    type: "Harvest Festival",
+    highlights: ["Archery competitions", "Local cuisines", "Folk dances"]
   }
 ];
 
@@ -144,31 +164,31 @@ export const mockFeatures = [
   {
     title: "Interactive Monastery Profiles",
     description: "Detailed information about each monastery including history, architecture, and cultural significance",
-    icon: "building"
+    image: "/feature-profiles.png"
   },
   {
     title: "Virtual Tours & Galleries",
     description: "360° virtual tours and high-resolution image galleries of monastery interiors and exteriors",
-    icon: "camera"
+    image: "/feature-tour.png"
   },
   {
     title: "Interactive Maps",
     description: "GPS-enabled maps showing monastery locations with travel routes and nearby attractions",
-    icon: "map"
+    image: "/feature-maps.png"
   },
   {
     title: "Festival Calendar",
     description: "Complete schedule of religious festivals and ceremonies with booking options",
-    icon: "calendar"
+    image: "/feature-festivals.png"
   },
   {
     title: "AI-Powered Guide",
     description: "Multilingual AI assistant for answering questions and providing personalized recommendations",
-    icon: "bot"
+    image: "/feature-ai.png"
   },
   {
     title: "Cultural Heritage",
     description: "Digital preservation of Sikkim's Buddhist culture, traditions, and ancient wisdom",
-    icon: "book"
+    image: "/feature-culture.png"
   }
 ];

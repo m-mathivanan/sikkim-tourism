@@ -253,7 +253,10 @@ export const EventsPage = () => {
 
                     {/* Action Buttons */}
                     <div className="flex gap-2 pt-2">
-                      <Button className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105">
+                      <Button 
+                        onClick={() => navigate(`/events/${event.id}/book`)}
+                        className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105"
+                      >
                         <Calendar className="mr-2 w-4 h-4" />
                         Book Slot
                       </Button>

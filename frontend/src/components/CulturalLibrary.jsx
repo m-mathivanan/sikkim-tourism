@@ -5,8 +5,14 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { 
   ArrowLeft, Play, BookOpen, Image as ImageIcon, Volume2, 
-  Eye, Heart, Clock, Download, Share2, Filter, Search
+  Eye, Heart, Clock, Download, Share2, Filter, Search, X, Info
 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -21,6 +27,8 @@ export const CulturalLibrary = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterType, setFilterType] = useState('all');
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchCulturalContent();
@@ -213,6 +221,7 @@ export const CulturalLibrary = () => {
                     src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][item.title.length % 4]} 
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   
@@ -280,7 +289,13 @@ export const CulturalLibrary = () => {
 
                     {/* Actions */}
                     <div className="flex items-center justify-between pt-2">
-                      <Button className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl mr-2">
+                      <Button 
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setIsModalOpen(true);
+                        }}
+                        className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl mr-2"
+                      >
                         <TypeIcon className="mr-2 w-4 h-4" />
                         {item.type === 'video' ? 'Watch' : item.type === 'audio' ? 'Listen' : 'Read'}
                       </Button>
@@ -321,6 +336,133 @@ export const CulturalLibrary = () => {
           </div>
         )}
       </div>
+      {/* Content Detail Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border-purple-100">
+          {selectedItem && (
+            <div className="space-y-8 p-2">
+              <DialogHeader>
+                <div className="flex items-center space-x-2 text-purple-600 mb-2">
+                  {React.createElement(getTypeIcon(selectedItem.type), { className: "w-5 h-5" })}
+                  <span className="text-sm font-semibold uppercase tracking-wider">{selectedItem.type} Details</span>
+                </div>
+                <DialogTitle className="text-3xl font-bold text-slate-900">
+                  {selectedItem.title}
+                </DialogTitle>
+                <div className="flex items-center space-x-4 mt-2">
+                  <Badge className={`${getCategoryColor(selectedItem.category)} border-0`}>
+                    {selectedItem.category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  </Badge>
+                  <div className="flex items-center text-slate-500 text-sm">
+                    <Eye className="w-4 h-4 mr-1" />
+                    {selectedItem.views_count || 0} views
+                  </div>
+                </div>
+              </DialogHeader>
+
+              {/* Media Content */}
+              <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl bg-black border border-purple-100">
+                {selectedItem.type === 'video' ? (
+                  <iframe 
+                    className="w-full h-full"
+                    src={selectedItem.content_url.includes('example.com') ? "https://www.youtube.com/embed/M7lc1UVf-VE" : selectedItem.content_url}
+                    title={selectedItem.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  ></iframe>
+                ) : selectedItem.type === 'gallery' ? (
+                  <img 
+                    src={selectedItem.thumbnail_url || '/hero-image.png'} 
+                    alt={selectedItem.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-slate-900 flex items-center justify-center p-12 text-center text-white">
+                    <div className="space-y-4">
+                      {React.createElement(getTypeIcon(selectedItem.type), { className: "w-16 h-16 mx-auto text-purple-400" })}
+                      <p className="text-xl">Content available for {selectedItem.type} playback</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Description & Metadata */}
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="md:col-span-2 space-y-6">
+                  <div className="space-y-4">
+                    <h4 className="text-xl font-bold text-slate-900 flex items-center">
+                      <Info className="w-5 h-5 mr-2 text-purple-600" />
+                      About this Content
+                    </h4>
+                    <p className="text-slate-700 leading-relaxed text-lg">
+                      {selectedItem.description}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 pt-4">
+                    {selectedItem.tags.map((tag, idx) => (
+                      <Badge key={idx} variant="secondary" className="bg-purple-50 text-purple-700 hover:bg-purple-100 border-purple-100">
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                    <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wider">Content Info</h4>
+                    
+                    <div className="space-y-4">
+                      {selectedItem.duration_minutes && (
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-slate-500 flex items-center">
+                            <Clock className="w-4 h-4 mr-2" /> Duration
+                          </span>
+                          <span className="font-bold text-slate-900">{selectedItem.duration_minutes} mins</span>
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-slate-500 flex items-center">
+                          <Download className="w-4 h-4 mr-2" /> Format
+                        </span>
+                        <span className="font-bold text-slate-900 uppercase">{selectedItem.type}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2 pt-4">
+                      <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-2xl py-6">
+                        Download Resource
+                      </Button>
+                      <Button variant="outline" className="w-full border-purple-200 text-purple-700 rounded-2xl py-6">
+                        <Share2 className="w-4 h-4 mr-2" /> Share Content
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-purple-600 to-pink-600 p-6 rounded-3xl text-white shadow-lg space-y-4">
+                    <h4 className="font-bold font-serif italic text-lg opacity-90">Cultural Note</h4>
+                    <p className="text-sm leading-relaxed text-white/90">
+                      "This content is part of our digital preservation initiative to document and protect Sikkim's endangered cultural practices for future generations."
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-6 border-t border-slate-100">
+                <Button 
+                  onClick={() => setIsModalOpen(false)}
+                  variant="ghost" 
+                  className="rounded-full px-8 py-2 text-slate-500 hover:bg-slate-50"
+                >
+                  Close Library
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

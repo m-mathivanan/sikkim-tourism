@@ -183,6 +183,33 @@ async def create_event(event_data: EventCreate):
             error=str(e)
         )
 
+# Event details and booking endpoints
+@api_router.get("/events/{event_id}", response_model=APIResponse)
+async def get_event_detail(event_id: str):
+    try:
+        event = await db.get_event_by_id(event_id)
+        if event:
+            if '_id' in event: event['_id'] = str(event['_id'])
+            if 'date' in event and hasattr(event['date'], 'isoformat'):
+                event['date'] = event['date'].isoformat()
+            return APIResponse(success=True, data={"event": event}, message="Event found")
+        return APIResponse(success=False, message="Event not found")
+    except Exception as e:
+        return APIResponse(success=False, message="Error", error=str(e))
+
+@api_router.post("/events/{event_id}/book", response_model=APIResponse)
+async def book_event(event_id: str, booking_data: dict):
+    try:
+        booking_data['event_id'] = event_id
+        booking_data['id'] = str(uuid.uuid4())
+        booking_data['booking_date'] = datetime.utcnow()
+        result = await db.create_event_booking(booking_data)
+        if '_id' in result: result['_id'] = str(result['_id'])
+        if 'booking_date' in result: result['booking_date'] = result['booking_date'].isoformat()
+        return APIResponse(success=True, data={"booking": result}, message="Booking confirmed")
+    except Exception as e:
+        return APIResponse(success=False, message="Booking failed", error=str(e))
+
 # AI Chat endpoints
 @api_router.post("/ai/chat", response_model=APIResponse)
 async def chat_with_ai(chat_request: ChatRequest):
@@ -384,6 +411,26 @@ async def get_forum_posts(category: str = None):
         return APIResponse(
             success=False,
             message="Failed to retrieve forum posts",
+            error=str(e)
+        )
+
+# Accommodation endpoints
+@api_router.get("/accommodations", response_model=APIResponse)
+async def get_accommodations(location: str = None):
+    try:
+        accommodations = await extended_db.get_accommodations(location)
+        for accommodation in accommodations:
+            accommodation['_id'] = str(accommodation['_id'])
+        
+        return APIResponse(
+            success=True,
+            data={"accommodations": accommodations},
+            message="Accommodations retrieved successfully"
+        )
+    except Exception as e:
+        return APIResponse(
+            success=False,
+            message="Failed to retrieve accommodations",
             error=str(e)
         )
 

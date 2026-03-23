@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -9,23 +9,30 @@ import {
   Navigation, Phone, AlertCircle, CheckCircle, Star
 } from 'lucide-react';
 import axios from 'axios';
+import BookingModal from './BookingModal';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 export const TravelPlanning = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('explore');
   const [travelPlans, setTravelPlans] = useState([]);
   const [accommodations, setAccommodations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [bookingModal, setBookingModal] = useState({ isOpen: false, plan: null });
+
+  // Get destination from query param
+  const queryParams = new URLSearchParams(location.search);
+  const initialDestination = queryParams.get('destination');
   const [newPlan, setNewPlan] = useState({
-    title: '',
+    title: initialDestination ? `Trip to ${initialDestination}` : '',
     description: '',
     start_date: '',
     end_date: '',
-    destinations: [],
+    destinations: initialDestination ? [initialDestination] : [],
     transportation_mode: 'car',
     package_type: 'individual',
     budget_range: '',
@@ -34,8 +41,11 @@ export const TravelPlanning = () => {
   });
 
   useEffect(() => {
+    if (initialDestination) {
+      setShowCreateForm(true);
+    }
     fetchData();
-  }, []);
+  }, [initialDestination]);
 
   const fetchData = async () => {
     try {
@@ -93,13 +103,14 @@ export const TravelPlanning = () => {
   };
 
   const getTransportIcon = (mode) => {
-    switch (mode) {
-      case 'plane': return Plane;
-      case 'car': return Car;
-      case 'bus': return Bus;
-      case 'train': return Train;
-      default: return Car;
-    }
+    const iconUrls = {
+      plane: "https://img.icons8.com/color/48/airplane-mode-on.png",
+      car: "https://img.icons8.com/color/48/car--v1.png",
+      bus: "https://img.icons8.com/color/48/bus.png",
+      train: "https://img.icons8.com/color/48/train.png"
+    };
+    const url = iconUrls[mode] || iconUrls.car;
+    return ({ className }) => <img src={url} className={className} alt={mode} onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }} />;
   };
 
   const getStatusColor = (status) => {
@@ -277,7 +288,10 @@ export const TravelPlanning = () => {
 
                         {/* Actions */}
                         <div className="flex gap-2 pt-2">
-                          <Button className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-xl">
+                          <Button 
+                            onClick={() => setBookingModal({ isOpen: true, plan })}
+                            className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-xl"
+                          >
                             Join Plan
                           </Button>
                           <Button variant="outline" className="px-3 border-blue-200 hover:bg-blue-50 text-blue-700 rounded-xl">
@@ -304,9 +318,10 @@ export const TravelPlanning = () => {
                 <Card key={place.id} className="group hover:shadow-xl transition-all duration-300 bg-white border border-blue-100 rounded-2xl overflow-hidden">
                   <div className="relative h-48 overflow-hidden">
                     <img 
-                      src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][place.name.length % 4]} 
+                      src={place.images?.[0] || ['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][place.name.length % 4]} 
                       alt={place.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
                     />
                     <div className="absolute top-4 left-4">
                       <Badge className="bg-white/90 text-slate-700 border-0 capitalize">
@@ -524,6 +539,16 @@ export const TravelPlanning = () => {
             </form>
           </div>
         </div>
+      )}
+
+      {/* Booking Modal */}
+      {bookingModal.plan && (
+        <BookingModal
+          isOpen={bookingModal.isOpen}
+          onClose={() => setBookingModal({ isOpen: false, plan: null })}
+          planTitle={bookingModal.plan.title}
+          planPrice={bookingModal.plan.budget_range}
+        />
       )}
     </div>
   );

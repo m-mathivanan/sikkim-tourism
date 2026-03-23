@@ -17,6 +17,8 @@ import { CulturalLibrary } from './components/CulturalLibrary';
 import { HandicraftWorkshops } from './components/HandicraftWorkshops';
 import { TravelPlanning } from './components/TravelPlanning';
 import { GamifiedLearning } from './components/GamifiedLearning';
+import { GlobalMap } from './components/GlobalMap';
+import { EventBookingPage } from './components/EventBookingPage';
 import { mockFeatures } from './mock/data';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -245,7 +247,6 @@ const Home = () => {
       </section>
 
       <Footer />
-      <AIChat />
     </div>
   );
 };
@@ -263,7 +264,10 @@ function App() {
           <Route path="/workshops" element={<HandicraftWorkshops />} />
           <Route path="/travel-planning" element={<TravelPlanning />} />
           <Route path="/games" element={<GamifiedLearning />} />
+          <Route path="/map" element={<GlobalMap />} />
+          <Route path="/events/:eventId/book" element={<EventBookingPage />} />
         </Routes>
+        <AIChat />
       </HashRouter>
     </div>
   );

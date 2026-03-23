@@ -68,11 +68,12 @@ export const HandicraftWorkshops = () => {
           special_requirements: ''
         });
       } else {
-        alert('Booking failed. Please try again.');
+        alert(`Booking failed: ${response.data.message || 'Please try again.'} ${response.data.error ? '(' + response.data.error + ')' : ''}`);
       }
     } catch (error) {
       console.error('Booking error:', error);
-      alert('Booking failed. Please try again.');
+      const errorMsg = error.response?.data?.message || error.response?.data?.error || error.message || 'Please try again.';
+      alert(`Booking failed: ${errorMsg}`);
     }
   };
 
@@ -149,6 +150,7 @@ export const HandicraftWorkshops = () => {
                   src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][workshop.title.length % 4]} 
                   alt={workshop.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
                 
@@ -261,7 +263,15 @@ export const HandicraftWorkshops = () => {
                   {/* Action Buttons */}
                   <div className="flex gap-3 pt-4">
                     <Button 
-                      onClick={() => setBookingModal({ isOpen: true, workshop })}
+                      onClick={() => {
+                        const defaultDate = workshop.available_dates?.[0] || '';
+                        setBookingModal({ isOpen: true, workshop });
+                        setBookingForm({
+                          ...bookingForm,
+                          date: defaultDate,
+                          time_slot: 'Morning Session (10:00 AM)'
+                        });
+                      }}
                       className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105"
                     >
                       <Calendar className="mr-2 w-4 h-4" />

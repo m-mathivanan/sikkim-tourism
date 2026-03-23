@@ -11,7 +11,7 @@ class BookingSlot(BaseModel):
     user_email: str
     user_phone: str
     date: date
-    time_slot: str
+    time_slot: str = "Morning Session (10:00 AM)"
     number_of_people: int
     special_requirements: Optional[str] = None
     status: str = "pending"  # pending, confirmed, cancelled
@@ -28,6 +28,7 @@ class RuralPlace(BaseModel):
     difficulty_level: str  # easy, moderate, difficult
     activities: List[str]
     images: List[str]
+    video_url: Optional[str] = None
     local_guide_required: bool
     transportation_info: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -167,7 +168,7 @@ class BookingCreate(BaseModel):
     user_email: str
     user_phone: str
     date: date
-    time_slot: str
+    time_slot: str = "Morning Session (10:00 AM)"
     number_of_people: int
     special_requirements: Optional[str] = None
 

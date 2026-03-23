@@ -5,8 +5,15 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { 
   ArrowLeft, Play, Trophy, Star, Clock, Users, Gamepad2,
-  Brain, Zap, Target, Award, BookOpen, Sparkles, Heart
+  Brain, Zap, Target, Award, BookOpen, Sparkles, Heart, X, ExternalLink
 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "./ui/dialog";
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -18,6 +25,8 @@ export const GamifiedLearning = () => {
   const [loading, setLoading] = useState(true);
   const [selectedAgeGroup, setSelectedAgeGroup] = useState('all');
   const [filteredGames, setFilteredGames] = useState([]);
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchGames();
@@ -215,6 +224,7 @@ export const GamifiedLearning = () => {
                     src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][game.title.length % 4]} 
                     alt={game.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent group-hover:from-black/70 transition-all duration-300"></div>
                   
@@ -288,9 +298,14 @@ export const GamifiedLearning = () => {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex gap-3 pt-4">
-                      <Button className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105">
+                      <Button 
+                        onClick={() => {
+                          setSelectedGame(game);
+                          setIsModalOpen(true);
+                        }}
+                        className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105"
+                      >
                         <Play className="mr-2 w-5 h-5" />
                         Play Now
                       </Button>
@@ -365,6 +380,76 @@ export const GamifiedLearning = () => {
           </div>
         </div>
       </div>
+
+      {/* Playback Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-slate-900 border-slate-800 rounded-3xl">
+          {selectedGame && (
+            <div className="flex flex-col h-[80vh]">
+              {/* Modal Header */}
+              <div className="p-6 bg-white border-b border-slate-100">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="flex items-center space-x-2 text-indigo-600 mb-1">
+                    <Sparkles className="w-5 h-5" />
+                    <span className="text-xs font-bold uppercase tracking-wider">Interactive Experience</span>
+                  </div>
+                </div>
+                <DialogTitle className="text-2xl font-bold text-slate-900">{selectedGame.title}</DialogTitle>
+                <div className="flex items-center gap-3 mt-2">
+                  <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-100">
+                    {selectedGame.type.replace('_', ' ')}
+                  </Badge>
+                  <span className="text-slate-400 text-sm flex items-center">
+                    <Star className="w-4 h-4 text-yellow-500 mr-1 fill-current" />
+                    {selectedGame.average_rating} rating
+                  </span>
+                </div>
+              </div>
+
+              {/* Player Container */}
+              <div className="flex-1 relative bg-black">
+                {selectedGame.content_url && !selectedGame.content_url.includes('#') ? (
+                  <iframe 
+                    className="w-full h-full"
+                    src={selectedGame.content_url}
+                    title={selectedGame.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 text-white space-y-6">
+                    <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mb-4">
+                      <Brain className="w-10 h-10 text-indigo-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold mb-2">Coming Soon to Sikkim Tourism!</h4>
+                      <p className="text-slate-400 max-w-md mx-auto">
+                        We are currently preparing this interactive experience for you. This game, exploring {selectedGame.cultural_theme}, 
+                        will be available for play very soon.
+                      </p>
+                    </div>
+                    <Button 
+                      onClick={() => setIsModalOpen(false)}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                    >
+                      Explore Other Games
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer Description */}
+              <div className="p-6 bg-white border-t border-slate-100">
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  {selectedGame.description}
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

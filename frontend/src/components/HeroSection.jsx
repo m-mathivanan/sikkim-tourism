@@ -1,8 +1,12 @@
 import React from 'react';
 import { Button } from './ui/button';
 import { MapPin, Calendar, Globe, ArrowRight } from 'lucide-react';
+import StartJourneyModal from './StartJourneyModal';
+import ViewMapModal from './ViewMapModal';
 
 export const HeroSection = () => {
+  const [isJourneyModalOpen, setIsJourneyModalOpen] = React.useState(false);
+  const [isMapModalOpen, setIsMapModalOpen] = React.useState(false);
   return (
     <section className="relative min-h-[80vh] bg-gradient-to-br from-slate-50 to-orange-50 overflow-hidden">
       {/* Background decoration */}
@@ -49,6 +53,7 @@ export const HeroSection = () => {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
+                onClick={() => setIsJourneyModalOpen(true)}
                 className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg group"
               >
                 Start Your Journey
@@ -56,6 +61,7 @@ export const HeroSection = () => {
               </Button>
               <Button 
                 variant="outline" 
+                onClick={() => setIsMapModalOpen(true)}
                 className="border-2 border-orange-200 hover:border-orange-300 text-slate-700 hover:bg-orange-50 px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 group"
               >
                 <MapPin className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
@@ -71,6 +77,7 @@ export const HeroSection = () => {
                 src="/hero-image.png" 
                 alt="Sacred Monastery in Sikkim" 
                 className="absolute inset-0 w-full h-full object-cover" 
+                onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
             </div>
@@ -102,6 +109,15 @@ export const HeroSection = () => {
           </div>
         </div>
       </div>
+
+      <StartJourneyModal 
+        isOpen={isJourneyModalOpen} 
+        onClose={() => setIsJourneyModalOpen(false)} 
+      />
+      <ViewMapModal 
+        isOpen={isMapModalOpen} 
+        onClose={() => setIsMapModalOpen(false)} 
+      />
     </section>
   );
 };

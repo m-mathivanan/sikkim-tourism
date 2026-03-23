@@ -46,7 +46,20 @@ Always be respectful and culturally sensitive."""
             )
             return response.text
         except Exception as e:
-            return f"I'm having trouble right now. Please try again. Error: {str(e)}"
+            error_str = str(e)
+            if "API_KEY_INVALID" in error_str or "API key not valid" in error_str or "API key" in error_str or "400" in error_str or "429" in error_str or "quota" in error_str.lower():
+                lower_msg = str(message).lower() if message else ""
+                if "hello" in lower_msg or "hi" in lower_msg:
+                    return "Hello! I am the AI Guide. (Note: I am running in Offline Demo Mode because the Google API key is invalid, but I can still answer basic questions!) How can I help you explore Sikkim's monasteries today?"
+                elif "rumtek" in lower_msg:
+                    return "Rumtek Monastery is the largest monastery in Sikkim and the seat of the Karmapa. It's famous for its stunning architecture and the Golden Stupa! Are you planning to visit?"
+                elif "pemayangtse" in lower_msg:
+                    return "Pemayangtse Monastery was built in 1705 and offers spectacular views of Mount Kanchenjunga. It's truly a must-visit location."
+                elif "festival" in lower_msg or "events" in lower_msg:
+                    return "Sikkim has many beautiful festivals! Some famous ones include Saga Dawa in May and Losar (Tibetan New Year) in February. Would you like to know more about a specific one?"
+                else:
+                    return f"That's an interesting question about '{message}'. (Offline Demo Mode: Please provide a valid Google Gemini API key in backend/.env to unlock my full AI capabilities and get a real detailed answer!)"
+            return f"I'm having trouble right now. Please try again. Error: {error_str}"
 
     def get_supported_languages(self) -> Dict[str, str]:
         return self.supported_languages

@@ -1,10 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Calendar, MapPin, Clock, Users } from 'lucide-react';
 
 export const EventsSection = ({ events }) => {
+  const navigate = useNavigate();
   return (
     <section className="py-20 bg-gradient-to-br from-slate-50 to-orange-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,31 +37,51 @@ export const EventsSection = ({ events }) => {
                         {event.type}
                       </Badge>
                     </div>
-                    <div className="w-12 h-12 bg-gradient-to-r from-orange-100 to-amber-100 rounded-2xl flex items-center justify-center">
-                      <Calendar className="w-6 h-6 text-orange-600" />
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg border-2 border-white ring-2 ring-orange-100 flex-shrink-0">
+                        <img 
+                          src={event.image || `/hero-image.png?v=${event.id}`} 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                          onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
+                          alt="Festival" 
+                        />
                     </div>
                   </div>
 
                   {/* Event Details */}
                   <div className="space-y-3">
                     <div className="flex items-center space-x-4 text-sm text-slate-600">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{new Date(event.date).toLocaleDateString('en-US', { 
+                      <div className="flex items-center space-x-2">
+                        <img 
+                          src="https://img.icons8.com/color/48/calendar.png" 
+                          className="w-4 h-4" 
+                          onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
+                          alt="Date" 
+                        />
+                        <span className="font-semibold">{new Date(event.date).toLocaleDateString('en-US', { 
                           month: 'long', 
                           day: 'numeric', 
                           year: 'numeric' 
                         })}</span>
                       </div>
-                      <div className="flex items-center space-x-1">
-                        <Clock className="w-4 h-4" />
-                        <span>{event.duration}</span>
+                      <div className="flex items-center space-x-2">
+                        <img 
+                          src="https://img.icons8.com/color/48/clock.png" 
+                          className="w-4 h-4" 
+                          onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
+                          alt="Time" 
+                        />
+                        <span className="font-semibold">{event.duration}</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-1 text-sm text-slate-600">
-                      <MapPin className="w-4 h-4" />
-                      <span>{event.monastery}</span>
+                    <div className="flex items-center space-x-2 text-sm text-slate-600">
+                      <img 
+                        src="https://img.icons8.com/color/48/marker.png" 
+                        className="w-4 h-4" 
+                        onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
+                        alt="Venue" 
+                      />
+                      <span className="font-semibold">{event.monastery}</span>
                     </div>
 
                     <p className="text-slate-700 leading-relaxed">
@@ -69,8 +91,13 @@ export const EventsSection = ({ events }) => {
 
                   {/* Highlights */}
                   <div className="space-y-2">
-                    <h4 className="text-sm font-semibold text-slate-800 flex items-center space-x-1">
-                      <Users className="w-4 h-4" />
+                    <h4 className="text-sm font-bold text-slate-800 flex items-center space-x-2">
+                      <img 
+                        src="https://img.icons8.com/color/48/conference-call.png" 
+                        className="w-4 h-4" 
+                        onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
+                        alt="Group" 
+                      />
                       <span>Event Highlights</span>
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -84,7 +111,10 @@ export const EventsSection = ({ events }) => {
 
                   {/* Action Button */}
                   <div className="pt-2">
-                    <Button className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105">
+                    <Button 
+                      onClick={() => navigate(`/events/${event.id}/book`)}
+                      className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl transition-all duration-200 transform hover:scale-105"
+                    >
                       Learn More & Book
                     </Button>
                   </div>

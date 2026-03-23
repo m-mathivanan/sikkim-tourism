@@ -42,6 +42,7 @@ class ExtendedDatabase:
                 "difficulty_level": "easy",
                 "activities": ["Village walk", "Historical site visit", "Photography", "Local food tasting"],
                 "images": ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop"],
+                "video_url": "https://www.youtube.com/embed/pAnuLOnYpTE",
                 "local_guide_required": True,
                 "transportation_info": "Accessible by road from Geyzing (40 km)",
                 "created_at": datetime.utcnow()
@@ -57,6 +58,7 @@ class ExtendedDatabase:
                 "difficulty_level": "moderate",
                 "activities": ["Cultural immersion", "Nature walks", "Traditional crafts learning", "Lepcha cuisine"],
                 "images": ["https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop"],
+                "video_url": "https://www.youtube.com/embed/3u_F-X6sP0I",
                 "local_guide_required": True,
                 "transportation_info": "Permit required, accessible from Mangan",
                 "created_at": datetime.utcnow()
@@ -71,7 +73,7 @@ class ExtendedDatabase:
                 "type": "video",
                 "category": "handicrafts",
                 "description": "Master artisan demonstrates the ancient art of Thangka painting with natural pigments",
-                "content_url": "https://example.com/thangka-video",
+                "content_url": "https://www.youtube.com/embed/M9R4IEmiIPw",
                 "thumbnail_url": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
                 "duration_minutes": 25,
                 "tags": ["thangka", "buddhist_art", "traditional_painting", "sikkim_culture"],
@@ -85,7 +87,7 @@ class ExtendedDatabase:
                 "type": "video",
                 "category": "healing_methods",
                 "description": "Documentary on indigenous Lepcha healing practices using local herbs and traditional knowledge",
-                "content_url": "https://example.com/lepcha-healing-video",
+                "content_url": "https://www.youtube.com/embed/Kz6-814-F2Y",
                 "thumbnail_url": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&h=300&fit=crop",
                 "duration_minutes": 35,
                 "tags": ["lepcha", "traditional_medicine", "herbs", "indigenous_knowledge"],
@@ -141,15 +143,85 @@ class ExtendedDatabase:
                 "id": str(uuid.uuid4()),
                 "name": "Heritage Monastery Homestay",
                 "type": "homestay",
-                "location": "Near Rumtek Monastery",
+                "location": "Near Rumtek Monastery, East Sikkim",
                 "coordinates": {"lat": 27.2896, "lng": 88.5591},
-                "price_range": "₹2000-3000 per night",
-                "amenities": ["Traditional rooms", "Local cuisine", "Monastery visits", "Cultural programs"],
+                "price_range": "₹2,000 - 3,500/night",
+                "amenities": ["Traditional rooms", "Local cuisine", "Monastery visits", "Cultural programs", "Wi-Fi"],
                 "contact_info": {"phone": "+91-9876543211", "email": "heritage@homestay.com", "website": ""},
+                "images": ["https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&h=600&fit=crop"],
+                "rating": 4.8,
+                "reviews_count": 56,
+                "availability_calendar": [],
+                "created_at": datetime.utcnow()
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Summit Namnang Courtyard",
+                "type": "hotel",
+                "location": "Gangtok, East Sikkim",
+                "coordinates": {"lat": 27.3314, "lng": 88.6138},
+                "price_range": "₹4,500 - 7,000/night",
+                "amenities": ["Mountain views", "Restaurant", "Modern rooms", "Central heating", "Spa"],
+                "contact_info": {"phone": "+91-9876543212", "email": "namnang@summithotels.com", "website": ""},
                 "images": ["https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop"],
                 "rating": 4.5,
-                "reviews_count": 45,
+                "reviews_count": 128,
                 "availability_calendar": [],
+                "created_at": datetime.utcnow()
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Pelling Hill Top Resort",
+                "type": "resort",
+                "location": "Pelling, West Sikkim",
+                "coordinates": {"lat": 27.3075, "lng": 88.2372},
+                "price_range": "₹3,500 - 5,500/night",
+                "amenities": ["Kanchenjunga view", "Garden", "Fireplace", "Local tours"],
+                "contact_info": {"phone": "+91-9876543213", "email": "pelling@resort.com", "website": ""},
+                "images": ["https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop"],
+                "rating": 4.6,
+                "reviews_count": 89,
+                "availability_calendar": [],
+                "created_at": datetime.utcnow()
+            }
+        ]
+
+        # Travel Plans
+        travel_plans_data = [
+            {
+                "id": str(uuid.uuid4()),
+                "title": "Spiritual Journey through West Sikkim",
+                "description": "A 5-day guided tour exploring the ancient monasteries of Pelling, Yuksom, and Tashiding.",
+                "start_date": datetime(2024, 4, 10),
+                "end_date": datetime(2024, 4, 15),
+                "destinations": ["Pelling", "Yuksom", "Tashiding", "Khecheopalri Lake"],
+                "transportation_mode": "car",
+                "package_type": "group",
+                "budget_range": "₹12,000 - 18,000",
+                "current_participants": 2,
+                "max_participants": 8,
+                "live_tracking_enabled": True,
+                "status": "active",
+                "is_public": True,
+                "creator_id": "admin",
+                "created_at": datetime.utcnow()
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "title": "East Sikkim Cultural Loop",
+                "description": "Discover the vibrant culture of Gangtok and surrounding monasteries like Rumtek and Enchey.",
+                "start_date": datetime(2024, 5, 20),
+                "end_date": datetime(2024, 5, 24),
+                "destinations": ["Gangtok", "Rumtek", "Enchey", "Nathula Pass"],
+                "transportation_mode": "bus",
+                "package_type": "individual",
+                "budget_range": "₹8,000 - 15,000",
+                "current_participants": 5,
+                "max_participants": 12,
+                "live_tracking_enabled": False,
+                "status": "active",
+                "is_public": True,
+                "creator_id": "admin",
                 "created_at": datetime.utcnow()
             }
         ]
@@ -160,6 +232,7 @@ class ExtendedDatabase:
         await self.handicraft_workshops.insert_many(workshops_data)
         await self.game_content.insert_many(games_data)
         await self.accommodations.insert_many(accommodations_data)
+        await self.travel_plans.insert_many(travel_plans_data)
 
     # Rural Places operations
     async def get_rural_places(self) -> List[dict]:
@@ -213,6 +286,15 @@ class ExtendedDatabase:
         booking_data['id'] = str(uuid.uuid4())
         booking_data['created_at'] = datetime.utcnow()
         
+        # Convert date objects to datetime for MongoDB compatibility
+        import datetime as dt_lib
+        for key, value in list(booking_data.items()):
+            if isinstance(value, dt_lib.date) and not isinstance(value, dt_lib.datetime):
+                booking_data[key] = dt_lib.datetime.combine(value, dt_lib.time.min)
+            elif isinstance(value, dt_lib.datetime):
+                # Ensure it is a naive datetime or UTC if needed
+                pass
+        
         await self.handicraft_workshops.update_one(
             {"id": workshop_id},
             {"$push": {"booking_slots": booking_data}}
@@ -221,6 +303,8 @@ class ExtendedDatabase:
         # Also store in separate bookings collection
         booking_data['workshop_id'] = workshop_id
         result = await self.bookings.insert_one(booking_data)
+        if '_id' in booking_data:
+            booking_data['_id'] = str(booking_data['_id'])
         return booking_data
 
     # Game Content operations

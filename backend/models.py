@@ -52,12 +52,15 @@ class MonasteryCreate(BaseModel):
 class Event(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    monastery: str  # Reference to monastery name or id
+    monastery: str
     date: datetime
     duration: str
     description: str
     type: str
     highlights: List[str]
+    images: List[str] = []
+    video_url: Optional[str] = None
+    booking_available: bool = True
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class EventCreate(BaseModel):
@@ -68,6 +71,9 @@ class EventCreate(BaseModel):
     description: str
     type: str
     highlights: List[str]
+    images: List[str] = []
+    video_url: Optional[str] = None
+    booking_available: bool = True
 
 class ChatMessage(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -91,3 +97,13 @@ class APIResponse(BaseModel):
     data: Optional[dict] = None
     message: str
     error: Optional[str] = None
+
+class EventBooking(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    event_id: str
+    user_name: str
+    user_email: str
+    user_phone: str
+    tickets_count: int
+    booking_date: datetime = Field(default_factory=datetime.utcnow)
+    status: str = "confirmed"

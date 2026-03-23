@@ -135,6 +135,9 @@ class Database:
                 "description": "Tibetan New Year celebration with traditional dances, prayers, and festivities",
                 "type": "Religious Festival",
                 "highlights": ["Mask dances", "Traditional music", "Special prayers", "Community feast"],
+                "images": ["https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=600&fit=crop"],
+                "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ", # Placeholder
+                "booking_available": True,
                 "created_at": datetime.utcnow()
             },
             {
@@ -146,6 +149,9 @@ class Database:
                 "description": "Celebrating Buddha's birth, enlightenment, and death on the same auspicious day",
                 "type": "Buddhist Festival",
                 "highlights": ["Butter lamp lighting", "Prayer flag hanging", "Merit-making activities"],
+                "images": ["https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&h=600&fit=crop"],
+                "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ", # Placeholder
+                "booking_available": True,
                 "created_at": datetime.utcnow()
             },
             {
@@ -157,6 +163,9 @@ class Database:
                 "description": "Sacred water ceremony where holy water is distributed to devotees for blessings",
                 "type": "Sacred Ceremony",
                 "highlights": ["Holy water blessing", "Prophecy reading", "Traditional ceremonies"],
+                "images": ["https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"],
+                "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ", # Placeholder
+                "booking_available": True,
                 "created_at": datetime.utcnow()
             },
             {
@@ -168,6 +177,37 @@ class Database:
                 "description": "Guardian deity festival celebrating Mount Kanchenjunga as the protector of Sikkim",
                 "type": "Guardian Deity Festival",
                 "highlights": ["Warrior dance", "Traditional archery", "Cultural performances"],
+                "images": ["https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=600&fit=crop"],
+                "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ", # Placeholder
+                "booking_available": True,
+                "created_at": datetime.utcnow()
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Kagyed Dance",
+                "monastery": "Phodong Monastery",
+                "date": datetime(2024, 12, 28),
+                "duration": "2 days",
+                "description": "Performed before the Tibetan New Year, these masked dances symbolize the destruction of evil forces.",
+                "type": "Masked Dance Festival",
+                "highlights": ["Cham dances", "Monastic rituals", "Feast"],
+                "images": ["https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&h=600&fit=crop"],
+                "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                "booking_available": True,
+                "created_at": datetime.utcnow()
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Losoong (Sikkimese New Year)",
+                "monastery": "Phodong & Rumtek",
+                "date": datetime(2024, 12, 30),
+                "duration": "5 days",
+                "description": "The Sikkimese New Year, celebrated with traditional dances and prayers for a good harvest.",
+                "type": "Harvest Festival",
+                "highlights": ["Archery competitions", "Local cuisines", "Folk dances"],
+                "images": ["https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop"],
+                "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                "booking_available": True,
                 "created_at": datetime.utcnow()
             }
         ]
@@ -204,6 +244,15 @@ class Database:
         result = await self.events.insert_one(event_data)
         event = await self.events.find_one({"_id": result.inserted_id})
         return event
+
+    async def get_event_by_id(self, event_id: str) -> Optional[dict]:
+        event = await self.events.find_one({"id": event_id})
+        return event
+
+    async def create_event_booking(self, booking_data: dict) -> dict:
+        result = await self.db.event_bookings.insert_one(booking_data)
+        booking = await self.db.event_bookings.find_one({"_id": result.inserted_id})
+        return booking
 
     # Chat operations
     async def save_chat_message(self, chat_data: dict) -> dict:

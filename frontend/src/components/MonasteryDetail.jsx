@@ -9,6 +9,8 @@ import {
   Info, Heart, Share2
 } from 'lucide-react';
 import axios from 'axios';
+import { VirtualTourModal } from './VirtualTourModal';
+import { MapViewer } from './MapViewer';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -20,6 +22,8 @@ export const MonasteryDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [showVirtualTour, setShowVirtualTour] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     fetchMonasteryDetails();
@@ -118,6 +122,7 @@ export const MonasteryDetail = () => {
                 src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][selectedImageIndex]} 
                 alt={monastery.name}
                 className="w-full h-full object-cover"
+                onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
               
@@ -148,7 +153,12 @@ export const MonasteryDetail = () => {
                     selectedImageIndex === index ? 'border-orange-500' : 'border-transparent'
                   }`}
                 >
-                  <img src={image} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
+                  <img 
+                    src={image} 
+                    alt={`View ${index + 1}`} 
+                    className="w-full h-full object-cover"
+                    onError={(e) => { e.target.onerror = null; e.target.src = '/hero-image.png'; }} 
+                  />
                 </button>
               ))}
             </div>
@@ -303,13 +313,17 @@ export const MonasteryDetail = () => {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           {monastery.virtual_tour && (
-            <Button className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105">
+            <Button 
+              onClick={() => setShowVirtualTour(true)}
+              className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+            >
               <Camera className="mr-2 w-5 h-5" />
               Start Virtual Tour
             </Button>
           )}
           <Button 
             variant="outline"
+            onClick={() => setShowMap(true)}
             className="border-2 border-orange-200 hover:border-orange-300 text-slate-700 hover:bg-orange-50 px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300"
           >
             <MapPin className="mr-2 w-5 h-5" />
@@ -317,6 +331,7 @@ export const MonasteryDetail = () => {
           </Button>
           <Button 
             variant="outline"
+            onClick={() => navigate(`/travel-planning?destination=${encodeURIComponent(monastery.name)}`)}
             className="border-2 border-orange-200 hover:border-orange-300 text-slate-700 hover:bg-orange-50 px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300"
           >
             <Calendar className="mr-2 w-5 h-5" />
@@ -324,6 +339,20 @@ export const MonasteryDetail = () => {
           </Button>
         </div>
       </div>
+
+      {/* Modals */}
+      {showVirtualTour && (
+        <VirtualTourModal 
+          monastery={monastery} 
+          onClose={() => setShowVirtualTour(false)} 
+        />
+      )}
+      {showMap && (
+        <MapViewer 
+          monastery={monastery} 
+          onClose={() => setShowMap(false)} 
+        />
+      )}
     </div>
   );
 };

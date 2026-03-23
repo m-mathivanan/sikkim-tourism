@@ -115,7 +115,7 @@ export const MonasteryDetail = () => {
           <div className="space-y-4">
             <div className="relative h-96 rounded-3xl overflow-hidden shadow-2xl">
               <img 
-                src={monastery.images[selectedImageIndex]} 
+                src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][selectedImageIndex]} 
                 alt={monastery.name}
                 className="w-full h-full object-cover"
               />
@@ -139,21 +139,19 @@ export const MonasteryDetail = () => {
             </div>
 
             {/* Thumbnail Gallery */}
-            {monastery.images.length > 1 && (
-              <div className="flex space-x-2 overflow-x-auto pb-2">
-                {monastery.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImageIndex(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-200 ${
-                      selectedImageIndex === index ? 'border-orange-500' : 'border-transparent'
-                    }`}
-                  >
-                    <img src={image} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className="flex space-x-2 overflow-x-auto pb-2">
+              {['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'].map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImageIndex(index)}
+                  className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-200 ${
+                    selectedImageIndex === index ? 'border-orange-500' : 'border-transparent'
+                  }`}
+                >
+                  <img src={image} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Monastery Info */}

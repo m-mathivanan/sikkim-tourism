@@ -212,7 +212,7 @@ export const GamifiedLearning = () => {
                 {/* Thumbnail */}
                 <div className="relative h-64 overflow-hidden">
                   <img 
-                    src={game.thumbnail_url} 
+                    src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][game.title.length % 4]} 
                     alt={game.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />

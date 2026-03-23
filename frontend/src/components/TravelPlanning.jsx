@@ -304,7 +304,7 @@ export const TravelPlanning = () => {
                 <Card key={place.id} className="group hover:shadow-xl transition-all duration-300 bg-white border border-blue-100 rounded-2xl overflow-hidden">
                   <div className="relative h-48 overflow-hidden">
                     <img 
-                      src={place.images[0]} 
+                      src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][place.name.length % 4]} 
                       alt={place.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />

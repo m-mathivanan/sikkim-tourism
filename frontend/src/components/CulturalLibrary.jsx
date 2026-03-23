@@ -210,7 +210,7 @@ export const CulturalLibrary = () => {
                 {/* Thumbnail */}
                 <div className="relative h-48 overflow-hidden">
                   <img 
-                    src={item.thumbnail_url || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop'} 
+                    src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][item.title.length % 4]} 
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />

@@ -17,7 +17,7 @@ export const MonasteryCard = ({ monastery }) => {
       {/* Image */}
       <div className="relative h-64 overflow-hidden">
         <img 
-          src={monastery.images[0]} 
+          src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][monastery.name.length % 4]} 
           alt={monastery.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />

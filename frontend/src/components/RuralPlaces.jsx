@@ -109,7 +109,7 @@ export const RuralPlaces = () => {
               {/* Image */}
               <div className="relative h-80 overflow-hidden">
                 <img 
-                  src={place.images[0]} 
+                  src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][place.name.length % 4]} 
                   alt={place.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />

@@ -146,7 +146,7 @@ export const HandicraftWorkshops = () => {
               {/* Image */}
               <div className="relative h-64 overflow-hidden">
                 <img 
-                  src={workshop.images[0]} 
+                  src={['/hero-image.png', '/monastery_1.png', '/monastery_2.png', '/monastery_3.png'][workshop.title.length % 4]} 
                   alt={workshop.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
